@@ -21,7 +21,7 @@ function LogIn() {
         <button type="submit" class="btn btn-primary mb-3">LOG IN</button>
         </div>
         <div>
-            <p>If you are not a TTT user, please sign up <a href='/SignUp'>here</a>.</p>
+            <p>If you are not a TTT user, please sign up <a href='/signup'>here</a>.</p>
             
         </div>
       </>  )

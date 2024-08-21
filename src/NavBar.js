@@ -19,7 +19,7 @@ function NavBar() {
                     <a class="nav-link" href="pass">Contact Us</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href='/LogIn'>Log in</a>
+                    <a class="nav-link" href='/login'>Log in</a>
                     </li>
                 </ul>
                 </div>
