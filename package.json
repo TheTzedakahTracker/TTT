@@ -9,6 +9,10 @@
     "bootstrap": "^5.3.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+<<<<<<< HEAD
+=======
+    "react-router": "^6.26.1",
+>>>>>>> 841a8f6613e08f2342faadfaf6354f5a019c962d
     "react-router-dom": "^6.26.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
