@@ -1,5 +1,6 @@
 import MakeDonation from './MakeDonation';
 import LogoImg from './LogoImg';
+import MyProfile from './MyProfile'
 import './MemberMain.css';
 
 
@@ -21,10 +22,11 @@ function MemberMain(){
                 <div className="col-lg-8 float-right">--Donated This Year: $1253.00--</div>
             </div>
         </div>
+        
         <div className="container-fluid">
             <div className="row">
-                <div col-6>
-                    <MakeDonation/>
+                <div className='col-6'>
+                    <MyProfile id='1'/>
                 </div>
             </div>
         </div>
