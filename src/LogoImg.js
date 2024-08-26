@@ -2,12 +2,12 @@
 import React from 'react';
 import tttLogo from './tttLogo.png';
 
- function LogoImg(){
+ function LogoImg(props){
 
     return(
 
         <div>
-        <img src={tttLogo} alt="My Image" width='50%' height='50%'/>
+            <img src={tttLogo} alt="logo" width={props.width} height={props.height} />
         </div>
 
     );//end return
