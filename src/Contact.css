@@ -1,0 +1,15 @@
+.contact {
+    border: black, 2px, solid;
+    border-radius: 15px;
+    padding:20px;
+    position: absolute;
+    top:30%;
+    left:33%;
+    width: 40%;
+    height: 45%;
+    font-family: 'Dosis', sans-serif;
+    font-size: larger;
+    background-color: white;
+    text-align:center;
+}
+
