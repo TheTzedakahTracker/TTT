@@ -6,12 +6,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import NavBar from './NavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AIApp from './AIApp';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));//Uses ReactDOM.createRoot to create a root to render the application into. This is part of Concurrent Mode in React.
 root.render(
   <React.StrictMode>
     <NavBar />
     <App />
+    <AIApp />
   </React.StrictMode>
 );
 
