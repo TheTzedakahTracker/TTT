@@ -2,29 +2,17 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import re
+from models import User
+
 
 app = Flask(__name__)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://root:Jerusalem_84@localhost/TRACKER'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://root:Jerusalem_84@localhost/TRACKER'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+#db = SQLAlchemy(app)
 
-class User(db.Model):
-
-    __tablename__ = 'users'
-    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    firstname = db.Column(db.String(30), nullable=False)
-    lastname = db.Column(db.String(30), nullable=False)
-    email_address = db.Column(db.String(30), nullable=False)
-    userName = db.Column(db.String(18), nullable=False)
-    userPassword = db.Column(db.String(22), nullable=False)
-
-    __table_args__ = (
-        CheckConstraint('LENGTH(userName) >= 7 AND LENGTH(userName) <= 18', name='username_length_check'),
-        CheckConstraint('LENGTH(userPassword) >= 7 AND LENGTH(userPassword) <= 22', name='userpassword_length_check'),
-    )
 
 # Create the table initially
 with app.app_context():
@@ -39,10 +27,13 @@ def get_a_user(userid):
     user = User.query.get(userid)
     if user:
         return jsonify({
-            "userid": user.userid,
-            "firstname": user.firstname,
-            "lastname": user.lastname,
-            "email": user.emailAdd
+            "userid": user.user_id,
+            "firstname": user.user_fname,
+            "lastname": user.user_lname,
+            "mi": user.user_mi,
+            "img_link":user.user_img_link,
+            "email": user.user_email,
+            "ai":user.user_use_ai
         }), 200
     else:
         return jsonify({"error": "User not found"}), 404
@@ -54,9 +45,11 @@ def add_user():
         return jsonify({"error": "Invalid email address"}), 400
     
     new_user = User(
-        firstname=data.get('firstname'),
-        lastname=data.get('lastname'),
-        emailAdd=data.get('emailAdd')
+        user_fname=data.get('firstname'),
+        user_mi=data.get('mi'),
+        user_lname=data.get('lastname'),
+        emailAdd=data.get('emailAdd'),
+        
     )
     try:
         db.session.add(new_user)

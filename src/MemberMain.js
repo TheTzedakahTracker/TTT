@@ -1,12 +1,12 @@
-import MakeDonation from './MakeDonation';
 import LogoImg from './LogoImg';
 import MyProfile from './MyProfile'
+import MakeDonation from './MakeDonation'
 import './MemberMain.css';
 
 
 
 function MemberMain(){
-
+console.log('in function');
     return(
         <>
         <div className="container-fluid">
@@ -26,7 +26,7 @@ function MemberMain(){
         <div className="container-fluid">
             <div className="row">
                 <div className='col-6'>
-                    <MyProfile id='1'/>
+                    <MakeDonation/>
                 </div>
             </div>
         </div>
