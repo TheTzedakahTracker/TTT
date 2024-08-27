@@ -1,69 +1,56 @@
-// import axios from 'axios';
 import { GEMINI_API_KEY } from '../config/config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
-// // Access the specific model
+
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-// // Function to query the model
-// export const queryModel = async (user, text) => {
-//   try {
-//     const response = await model.generateContent({
-//       role: user,
-//       parts: text
-//     });
-//     return response;
-//   } catch (error) {
-//     console.error('Error querying model:', error);
-//     return { response: 'An error occurred' };
-//   }
-// };
+
+export const queryModel = async (text) => {
+
+
+try {
+
+  console.log('User Input:', text);
+
+  const result = await model.generateContent(text)
+
+  const responseText = await result.response.text();
+
+  console.log('Gemini API Response:', responseText);
+  
+  const requiresSearch = text.includes('');
+  const searchQuery = requiresSearch ? text : '';
+  
+  console.log('Determined requiresSearch:', requiresSearch);
+  console.log('Search Query:', searchQuery);
+
+  return { text: responseText, requiresSearch, searchQuery };
+} catch (error) {
+  console.error('Error querying model:', error);
+
+  return { text: 'An error occurred', requiresSearch: false };
+}
+
+}
+
 
 
 // import { GEMINI_API_KEY } from '../config/config';
+// import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// const API_KEY = GEMINI_API_KEY;
+// const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+// const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-export const queryModel = async (text) => {
+// const testGemini = async () => {
 //   try {
-//     const response = await axios.post(
-//       'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent',
-//       {
-//         contents: [
-//           {
-//             role: 'user',
-//             parts: [{ text }]
-//           }
-//         ]
-//       },          
-//       {
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'x-goog-api-key': API_KEY
-//         }
-//       }
-//     )
-// ;
-
-//     return response.data;
+//     const result = await model.generateContent("Tell me about Jewish organizations.");
+//     const responseText = await result.response.text();
+//     console.log('Gemini API Test Response:', responseText);
 //   } catch (error) {
-//     console.error('Error querying Gemini API:', error);
-//     return { response: 'An error occurred' };
+//     console.error('Error testing Gemini API:', error);
 //   }
 // };
 
-
-
-async function run() {
-  const prompt = 'but if i ask you questions about tax do you know anytihing about a laymen being able to benefit from it with their normal jobs'
-
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text();
-  // console.log(text);
-}
-
-run();
-};
+// testGemini();
