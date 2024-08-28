@@ -1,4 +1,4 @@
-from app import db
+from auth import db
 
 class Users(db.Model):
     __tablename__ = 'users'
@@ -11,7 +11,7 @@ class Users(db.Model):
     user_email = db.Column(db.String(100), unique=True, nullable=False)
     user_pswd  = db.Column(db.String(100), nullable=False)
     user_isactive = db.Column(db.Boolean(), default=True)
-    user_use_ai = db.Column(db.Boolean(), default=True)
+    user_use_ai = db.Column(db.Boolean(), default=False)
 
     
     def __repr__(self):

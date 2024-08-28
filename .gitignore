@@ -11,6 +11,9 @@
 # production
 /build
 
+#security
+Capstone-Back/app/config.json
+
 # misc
 .DS_Store
 .env.local
