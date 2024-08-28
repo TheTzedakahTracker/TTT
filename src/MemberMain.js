@@ -18,13 +18,11 @@ console.log('in function');
                 <p>Donated this year:</p>
                 <p>Funds available for Donating:</p>
             </div>
-        </div>
-        
-        <div className="container-fluid">
-            <div className="row">
-                <div className='col-6'>
-                    <MakeDonation/>
-                </div>
+
+
+            <div>
+                <button onClick={handleClick}>New Donation</button>
+
             </div>
           <div>{showDonation && <MakeDonation />}</div>
         </>

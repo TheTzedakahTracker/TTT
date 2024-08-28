@@ -30,7 +30,9 @@ function App() {
                 />
                 <Route path='/signup' element={<SignUp />} />
                 <Route path='/donationhistory' element={<DonationHistory/>}/>
-                <Route path='/' element={<MemberMain/>} />
+
+                <Route path='/membermain' element={<MemberMain/>} />
+
                 <Route
                   path='/membermain'
                   element= {user ? <MemberMain user={user} /> : <Navigate to="/login" />}
@@ -39,7 +41,10 @@ function App() {
                 {/* <Route path='/test' element={<TestComp />} /> */}
                 <Route path='/ai' element={<AI />} />
                 <Route path='/chatcomponent' element={<ChatComponent />} />
+
             <Route path='/donate' element={<MakeDonation />} />
+
+
           </Routes>
         </Router>
       )
