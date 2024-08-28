@@ -14,6 +14,13 @@
 #security
 Capstone-Back/app/config.json
 
+Capstone-Back/.venv/
+Capstone-Back/venv/
+
+
+
+
+
 # misc
 .DS_Store
 .env.local
