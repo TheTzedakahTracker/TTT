@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from flask_bcrypt import Bcrypt
 import os
+#from models import  Users
 
 
 app = Flask(__name__)
@@ -12,7 +13,7 @@ bcrypt = Bcrypt(app)
 
 cwd = os.getcwd()
 
-with open(f'{cwd}/Capstone-Back/app/config.json', 'r', encoding='utf-8') as f:
+with open(f'{cwd}/config.json', 'r', encoding='utf-8') as f:
     jconfig = json.load(f)
 
 # Configuration
@@ -26,19 +27,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
-class User(db.Model):
-    user_id = db.Column(db.Integer, primary_key=True)
-    user_fname = db.Column(db.String(50), nullable=False)
-    user_lname = db.Column(db.String(50), nullable=False)
-    user_mi = db.Column(db.String(10))
-    user_img_link =  db.Column(db.String(100))
-    user_email = db.Column(db.String(100), unique=True, nullable=False)
-    user_pswd  = db.Column(db.String(100), nullable=False)
-    user_isactive = db.Column(db.Boolean(), default=True)
-    user_use_ai = db.Column(db.Boolean(), default=True)
-    
-    def __repr__(self):
-        return f'<User {self.user_email}>'
+
 
     
 @app.route('/get_name', methods=['GET'])
@@ -46,7 +35,7 @@ class User(db.Model):
 def get_name():
   # Extract the user ID from the JWT
   user_id = get_jwt_identity()
-  user = User.query.filter_by(id=user_id).first()
+  user = Users.query.filter_by(id=user_id).first()
   
   # Check if user exists
   if user:
@@ -61,7 +50,7 @@ def login():
     password = data['password']
     print('line 53 Received data:', useremail , password)
 
-    user = User.query.filter_by(user_email=useremail).first()
+    user = Users.query.filter_by(user_email=useremail).first()
     is_valid = (user.user_pswd == password) and (user.user_email == useremail)
     
     if is_valid:

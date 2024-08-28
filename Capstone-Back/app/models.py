@@ -41,7 +41,7 @@ class UserFunds(db.Model):
     uf_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     uf_description = db.Column(db.String(255))
-    uf_amount = db.Column(db.Numeric)
+    uf_amount = db.Column(db.Numeric(precision=10, scale=2))  # Assuming 10 total digits, 2 after decimal
     uf_date_added = db.Column(db.Date)
 
 class Donations(db.Model):

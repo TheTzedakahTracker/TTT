@@ -30,12 +30,24 @@ def invalid_email(email):
 
 #function that checks if its a proper date
 def is_date(date):
-    try:
-        #The first "datetime" refers to the module itself, while the second "datetime" is the class within the module that allows you to work with dates and times in Python
-        datetime.datetime.strptime(date, '%m-%d-%Y')
-        return True
-    except ValueError:
+    if isinstance(date, str):
+        try:
+            #The first "datetime" refers to the module itself, while the second "datetime" is the class within the module that allows you to work with dates and times in Python
+            datetime.datetime.strptime(date, '%m/%d/%Y')
+            return True
+        except ValueError:
+            return False
+    else:
         return False
+
+#function to check if email is in the database
+def check_if_email_exists(email):
+    user = Users.query.filter_by(user_email=email).first()
+    if user:
+        return True
+    else:
+        return False
+
  #route to get user info   
 @app.route('/get_a_user/<int:userid>', methods=['GET'])
 def get_a_user(userid):
@@ -64,6 +76,8 @@ def add_user():
 
     if invalid_email(data.get('emailAdd')):
         return jsonify({"error": "Invalid email address"}), 400
+    if check_if_email_exists(data.get('emailAdd')):
+        return jsonify({"error": "Email address already exists"}), 400
     
     if not isinstance(data.get('firstname'), str):
         return jsonify({'error': 'Invalid first name'}), 400
@@ -77,11 +91,11 @@ def add_user():
         #return jsonify({'error': 'ai_tag'}), 400
 
     new_user = Users(
-        user_fname=data.get('firstname'),
-        user_mi=data.get('mi'),
-        user_lname=data.get('lastname'),
-        user_email=data.get('emailAdd'),
-        user_pswd=data.get('passw'),
+        user_fname=data.get('firstname').strip(),
+        user_mi=data.get('mi').strip(),
+        user_lname=data.get('lastname').strip(),
+        user_email=data.get('emailAdd').strip(),
+        user_pswd=data.get('passw').strip(),
         #user_img_link=data.get('user_img'),
         user_use_ai=data.get('ai')        
     )
@@ -122,8 +136,10 @@ def donate():
         donation_sh_note = data.get('note')        
     )
     
-    if is_date(data.get('date')):
-        thisDonation.donation_date = datetime.strptime(data.get('date'), '%m-%d-%Y').date()
+    if is_date(data.get('dDate')):
+        thisDonation.donation_date = datetime.datetime.strptime(data.get('dDate'), '%m/%d/%Y').date()
+    else:
+        thisDonation.donation_date = datetime.datetime.now().date()
         
     #check if there are funds available for this transaction
     funds_available = db.session.query(func.sum(UserFunds.uf_amount)).filter(UserFunds.user_id == thisDonation.user_id).scalar() 
@@ -158,46 +174,52 @@ def add_organization():
     logging.info('in org func')
     data = None
     try:
-        data = request.get_json()
+         data = request.get_json()
     except Exception as e:
-        return ('there is erroi in adding org:')
-    if not isinstance(data.get('oName'),str) or len(data.get('oName')) > 0:
-        return jsonify({'error: organization name invalid'})
+         return ('there is error in adding org:')
+    
+    if not isinstance(data.get('oName'),str) or len(data.get('oName')) < 0:
+         return jsonify({'error: organization name invalid'})
     if not isinstance(data.get('oDesc'),str):
         return jsonify({'error: description invalid'})
     
     new_org = Organizations(
-        org_name = data.get('oName'),
-        org_description = data.get('oDesc')   
-    )
+         org_name = data.get('oName'),
+         org_description = data.get('oDesc')   
+     )
     if isinstance(data.get('oZip'),str):
-        new_org.org_zip = data.get('oZip')
+         new_org.org_zip = data.get('oZip')
     if isinstance(data.get('oCategory'),str):
-        new_org.org_category = data.get('oCategory')
+         new_org.org_category = data.get('oCategory')
     
     try:
         db.session.add(new_org)
         db.session.commit()
-        logging.info("idid:" + new_org.org_id)
+        logging.info(new_org.org_id)
     except Exception as e:
         db.session.rollback()
         return("error: ", e)
-    #if you want to assosiate this organization with a specific user
-    if data.hasOwnProperty('userid'):
+    # # if you want to assosiate this organization with a specific user
+    if 'userid' in data:
         thispref = UsersOrgPref(
-            user_id = data.get('userid'),
-            org_id = new_org.org_id
-        )
-        try:
-            db.session.add(thispref)
-            db.session.commit()
-        except Exception as e:
-            db.rollback()
-            return jsonify({"error: issue adding organization preference"})
+        user_id = data.get('userid'),
+        org_id = new_org.org_id
+       )
+    try:
+        db.session.add(thispref)
+        db.session.commit()
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error: issue adding organization preference"})
+    return jsonify('organization added')
                 
 @app.route('/add_funds', methods=['POST'])          
 def add_userfunds():
-    data = request.json()    
+    data = None
+    try:
+         data = request.get_json()
+    except Exception as e:
+         return ('there is error in adding funds:')   
     
     if not isinstance(data.get('userid'), int):
         return jsonify({'Invalid user'})
@@ -211,26 +233,30 @@ def add_userfunds():
         uf_description = data.get('fDesc'),
         uf_amount = data.get('fAmount')        
     )
-    if is_date(data.get('fDdate')):
-        new_funds.uf_date_added = datetime.strptime(data.get('fDate'), '%m-%d-%Y').date()
-          
+    if (is_date(data.get('fDate'))):
+        new_funds.uf_date_added = datetime.datetime.strptime(data.get('fDate'), '%m/%d/%Y').date()
+    else:
+        new_funds.uf_date_added = datetime.datetime.now().date()
+  
     try:
         db.session.add(new_funds)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
+    return jsonify('funds added')
     
     # try:
-    #     users = User.query.all()
-    #     users_list = [{
-    #         "userid": user.userid,
-    #         "firstname": user.firstname,
-    #         "lastname": user.lastname,
-    #         "emailAdd": user.emailAdd
-    #     } for user in users]
-    #     return jsonify(users_list), 200
+    #      users = Users.query.all()
+    #      users_list = [{
+    #          "userid": user.userid,
+    #          "firstname": user.firstname,
+    #          "lastname": user.lastname,
+    #          "emailAdd": user.emailAdd
+    #      } for user in users]
+    #      return jsonify(users_list), 200
     # except Exception as e:
-    #     return jsonify({"error": str(e)}), 500
+    #      return jsonify({"error": str(e)}), 500
+
 
 @app.route('/routes', methods=['GET'])
 def get_routes():
