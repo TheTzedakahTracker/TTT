@@ -10,6 +10,8 @@ import { useState } from "react";
 import AI from "./AIApp";
 // import TestComp from "./AI/components/TestComp";
 import ChatComponent from "./AI/components/ChatComponent";
+import MakeDonation from "./MakeDonation";
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -28,7 +30,9 @@ function App() {
                 />
                 <Route path='/signup' element={<SignUp />} />
                 <Route path='/donationhistory' element={<DonationHistory/>}/>
+
                 <Route path='/membermain' element={<MemberMain/>} />
+
                 <Route
                   path='/membermain'
                   element= {user ? <MemberMain user={user} /> : <Navigate to="/login" />}
@@ -37,6 +41,10 @@ function App() {
                 {/* <Route path='/test' element={<TestComp />} /> */}
                 <Route path='/ai' element={<AI />} />
                 <Route path='/chatcomponent' element={<ChatComponent />} />
+
+            <Route path='/donate' element={<MakeDonation />} />
+
+
           </Routes>
         </Router>
       )

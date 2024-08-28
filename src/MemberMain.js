@@ -1,12 +1,13 @@
-import MakeDonation from './MakeDonation';
 import LogoImg from './LogoImg';
+import MyProfile from './MyProfile'
+import MakeDonation from './MakeDonation'
 import './MemberMain.css';
 import { useState } from 'react';
 
 
 
 function MemberMain(){
-
+console.log('in function');
     return(
         <>
             <div>
@@ -18,8 +19,10 @@ function MemberMain(){
                 <p>Funds available for Donating:</p>
             </div>
 
+
             <div>
                 <button onClick={handleClick}>New Donation</button>
+
             </div>
           <div>{showDonation && <MakeDonation />}</div>
         </>
