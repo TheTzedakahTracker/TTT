@@ -86,7 +86,7 @@ def add_user():
     if not isinstance(data.get('lastName'), str):
         return jsonify({'error': 'Invalid last name'}), 400
     if not isinstance(data.get('password'), str):
-        return jsonify({'error': 'pass'}), 400
+        return jsonify({'error': 'password'}), 400
     if not isinstance(data.get('aiAccepted'), bool):
         return jsonify({'error': 'ai_tag'}), 400
 
