@@ -1,6 +1,7 @@
 import MakeDonation from './MakeDonation';
 import LogoImg from './LogoImg';
 import './MemberMain.css';
+import { useState } from 'react';
 
 
 
@@ -8,28 +9,21 @@ function MemberMain(){
 
     return(
         <>
-        <div className="container-fluid">
-            <div className="row">
-            <div className="col-12 b" ></div>
+            <div>
+                <h4>First Last</h4>
+            </div>
 
-            <div className="col-12 r" ></div>
+            <div>
+                <p>Donated this year:</p>
+                <p>Funds available for Donating:</p>
             </div>
-        </div>
-        <div className="container-fluid bg_color">
-            <div className="row">
-                <div className="col-lg-4"><LogoImg/></div>
-                <div className="col-lg-8 float-right">--Donated This Year: $1253.00--</div>
+
+            <div>
+                <button onClick={handleClick}>New Donation</button>
             </div>
-        </div>
-        <div className="container-fluid">
-            <div className="row">
-                <div col-6>
-                    <MakeDonation/>
-                </div>
-            </div>
-        </div>
+          <div>{showDonation && <MakeDonation />}</div>
         </>
-    );//end return
+    );
 
 }
 export default MemberMain;
