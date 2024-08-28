@@ -8,28 +8,44 @@
     border-radius: 8px;
     padding: 10px;
     background-color: #f9f9f9;
+    position: relative;
   }
+
+  
   
   .chat-messages {
     flex-grow: 1;
     overflow-y: auto;
     margin-bottom: 10px;
+    /* max-height: 100%; */
+    background-color: black;
+    max-height: calc(100% - 70px)
+    
   }
   
   .message {
-    margin: 5px 0;
-    padding: 8px;
-    border-radius: 4px;
+    max-width: 70%; /* Adjusts the maximum width of the message bubbles */
+    margin: 5px 10px; /* Adds margin to create space around the bubbles */
+    padding: 10px;
+    border-radius: 10px;
     line-height: 1.5;
+    word-wrap: break-word;
+    background-color: transparent;
+    position: relative;
+  z-index: 1;
   }
   
   .message.user {
-    background-color: #daf8da;
-    text-align: right;
+    /* background-color: #daf8da; */
+    background-color: #41408d11;
+    text-align: left; /* Align text to the left */
+  margin-left: auto;
   }
   
   .message.api {
-    background-color: #e1e9ff;
+    background-color: #8d8db011;
+    text-align: left; /* Align text to the left */
+  margin-right: auto;
   }
   
   .no-messages {
@@ -40,6 +56,8 @@
   
   .chat-form {
     display: flex;
+    border-top: 1px solid #ddd; /* Add a border to separate the form from messages */
+    padding-top: 10px;
   }
   
   .chat-input {
@@ -47,20 +65,135 @@
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    margin-right: 5px;
+    height: 40px; /* Set the height to match the button */
+
   }
   
   .chat-submit {
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
-    background-color: #007bff;
+    background-color: #41408d99;
     color: white;
     cursor: pointer;
     margin-left: 5px;
+    height: 40px; /* Set the height to match the button */
+
   }
   
   .chat-submit:disabled {
     background-color: #a9a9a9;
     cursor: not-allowed;
+  }
+  
+  .popup-overlay {
+    position: fixed;
+    bottom: 20px;
+    right: 80px;
+    width: 400px; /* Adjust as needed */
+    height: 600px; /* Adjust as needed */
+    /* background: white; */
+    /* border: 1px solid #ddd; */
+    border-radius: 8px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* align-items: flex-end; */
+    transition: transform 0.3s ease; /* Smooth transition for expanding */
+    /* align-items: center; */
+    z-index: 1000; /* Ensure the popup is on top of other content */
+    
+  }
+
+  .popup-overlay.minimized {
+    display: none; /* Hide the overlay when minimized */
+  }
+
+  .minimized-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    /* position: fixed; */
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+
+  .minimized-icon-container {
+    width: 55px; /* Size of the circle */
+    height: 55px; /* Size of the circle */
+    background-color: white; /* Background color of the circle */
+    border-radius: 50%; /* Makes the container a circle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 20px; /* Distance from the bottom */
+    right: 20px; /* Distance from the right */
+    z-index: 1000; /* Ensure it's on top of other content */
+    cursor: pointer; /* Change cursor to pointer when hovering over the icon */
+  }
+  
+  .popup-container {
+    position: fixed;
+    bottom: 20px; /* Align to bottom */
+    right: 100px; /* Distance from the right, so it appears to the left of the icon */
+    width: 400px; /* Adjust as needed for your chatbox */
+    height: 600px; /* Adjust as needed for your chatbox */
+    /* background-color: rgb(214, 71, 71); */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(9, 31, 235, 0.2); /* Optional shadow for better visibility */
+    display: flex;
+    flex-direction: column;
+    z-index: 1000; /* Ensure it's on top of other content */
+    /* flex: 1; */
+    transition: transform 0.3s ease;
+  }
+
+  /* .popup-open {
+    transform: translateX(0);
+  } */
+
+  /* .minimized-icon-container.popup-open + .popup-overlay {
+    transform: translateX(-100%); 
+  } */
+  
+  /* .popup-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    max-height: 200px;
+    
+    padding-right: 10px; 
+    max-height: calc(100% - 70px);
+    background-color: transparent;
+  } */
+
+  .popup-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding-right: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    transition: max-height 0.3s ease; /* Smooth transition for expanding */
+    min-height: 200px; /* Minimum height for initial state */
+    max-height: calc(100% - 70px); /* Initial height considering form and padding */
+    
+  }
+
+  .popup-messages.expanded {
+    max-height: 400px; /* Expanded height, adjust as needed */
+  }
+  
+  .popup-form {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    /* background-color: #fff; */
+    border-top: 1px solid #ddd;
+    
   }
   
