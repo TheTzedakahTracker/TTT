@@ -11,7 +11,6 @@ import AIApp from './AIApp';
 const root = ReactDOM.createRoot(document.getElementById('root'));//Uses ReactDOM.createRoot to create a root to render the application into. This is part of Concurrent Mode in React.
 root.render(
   <React.StrictMode>
-    <NavBar />
     <App />
     <AIApp />
   </React.StrictMode>
