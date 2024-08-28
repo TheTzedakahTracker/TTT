@@ -74,26 +74,26 @@ def add_user():
     except Exception as e:
         return ('there is erro:')
 
-    if invalid_email(data.get('emailAdd')):
+    if invalid_email(data.get('email')):
         return jsonify({"error": "Invalid email address"}), 400
-    if check_if_email_exists(data.get('emailAdd')):
+    if check_if_email_exists(data.get('email')):
         return jsonify({"error": "Email address already exists"}), 400
     
-    if not isinstance(data.get('firstname'), str):
+    if not isinstance(data.get('firstName'), str):
         return jsonify({'error': 'Invalid first name'}), 400
-    if not isinstance(data.get('mi'), str):
-        return jsonify({'error': 'Invalid mid'}), 400
-    if not isinstance(data.get('lastname'), str):
+    #if not isinstance(data.get('mi'), str):
+        #return jsonify({'error': 'Invalid mid'}), 400
+    if not isinstance(data.get('lastName'), str):
         return jsonify({'error': 'Invalid last name'}), 400
-    if not isinstance(data.get('passw'), str):
+    if not isinstance(data.get('password'), str):
         return jsonify({'error': 'pass'}), 400
-    #if not isinstance(data.get('ai'), bool):
-        #return jsonify({'error': 'ai_tag'}), 400
+    if not isinstance(data.get('aiAccepted'), bool):
+        return jsonify({'error': 'ai_tag'}), 400
 
     new_user = Users(
-        user_fname=data.get('firstname').strip(),
-        user_mi=data.get('mi').strip(),
-        user_lname=data.get('lastname').strip(),
+        user_fname=data.get('firstName').strip(),
+        #user_mi=data.get('mi').strip(),
+        user_lname=data.get('lastName').strip(),
         user_email=data.get('email').strip(),
         user_pswd=data.get('password').strip(),
         #user_img_link=data.get('user_img'),
