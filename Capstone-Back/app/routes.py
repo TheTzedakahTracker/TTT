@@ -8,10 +8,13 @@ from auth import db, app
 # Correct import path if 'models.py' is in the 'app' package
 from models import  Users, Donations, AppliedFundsDonation, Organizations, UserFunds, UsersOrgPref
 import logging
+# from flask_bcrypt import Bcrypt
 
 
-#app = Flask(__name__)
-CORS(app)
+# app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
+# db = SQLAlchemy(app)
+# bcrypt = Bcrypt(app)
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://root:Jerusalem_84@localhost/tzedaka_tracker'
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -62,28 +65,30 @@ def add_user():
     except Exception as e:
         return ('there is erro:')
 
-    if invalid_email(data.get('emailAdd')):
+    if invalid_email(data.get('email')):
         return jsonify({"error": "Invalid email address"}), 400
     
-    if not isinstance(data.get('firstname'), str):
+    if not isinstance(data.get('firstName'), str):
         return jsonify({'error': 'Invalid first name'}), 400
-    if not isinstance(data.get('mi'), str):
-        return jsonify({'error': 'Invalid mid'}), 400
-    if not isinstance(data.get('lastname'), str):
+    # if not isinstance(data.get('mi'), str):
+    #     return jsonify({'error': 'Invalid mid'}), 400
+    if not isinstance(data.get('lastName'), str):
         return jsonify({'error': 'Invalid last name'}), 400
-    if not isinstance(data.get('passw'), str):
+    if not isinstance(data.get('password'), str):
         return jsonify({'error': 'pass'}), 400
     #if not isinstance(data.get('ai'), bool):
         #return jsonify({'error': 'ai_tag'}), 400
+    ai_accepted = data.get('aiAccepted', False)
+
 
     new_user = Users(
-        user_fname=data.get('firstname'),
-        user_mi=data.get('mi'),
-        user_lname=data.get('lastname'),
-        user_email=data.get('emailAdd'),
-        user_pswd=data.get('passw'),
+        user_fname=data.get('firstName'),
+        # user_mi=data.get('mi'),
+        user_lname=data.get('lastName'),
+        user_email=data.get('email'),
+        user_pswd=data.get('password'),
         #user_img_link=data.get('user_img'),
-        user_use_ai=data.get('ai')        
+        user_use_ai=data.get('aiAccepted')        
     )
     try:
         db.session.add(new_user)
@@ -94,6 +99,8 @@ def add_user():
         db.session.rollback()
         #app.logger.info(e)
         return jsonify({"message": "issue adding user!"})
+    
+    
 
 
 @app.route('/get_all_funds/<int:userid>', methods= ['GET'])
@@ -232,7 +239,7 @@ def add_userfunds():
     # except Exception as e:
     #     return jsonify({"error": str(e)}), 500
 
-@app.route('/routes', methods=['GET'])
+@app.route('/get_routes', methods=['GET'])
 def get_routes():
     return jsonify({rule.rule: rule.endpoint for rule in app.url_map.iter_rules()})
 
