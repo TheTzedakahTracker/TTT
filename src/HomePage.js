@@ -1,6 +1,6 @@
 import './HomePage.css'
 
-function HomePage() {
+function HomePage({ user, handleLogout }) {
     return(
         <body>
             <div className="jumbotron hbox">
@@ -10,8 +10,13 @@ function HomePage() {
             <p className="lead">Not anymore.</p>
             <p className="lead">The Tzedakah Tracker is a simple, efficient way to keep track of all your Tzedakah related transactions.</p>
             <hr className="my-4"/>
-            <p>Click below to log in:</p>
-            <a className="btn btn-outline-dark btn-sm rounded-pill" href="/login" role="button">LOG IN</a>
+            {user ? (
+                    <><p>Click below to log out:</p>
+                    <a className="btn btn-outline-dark btn-sm rounded-pill" role="button" onClick={handleLogout}>LOG OUT</a></>
+                ) : (
+                    <><p>Click below to log in:</p>
+                    <a className="btn btn-outline-dark btn-sm rounded-pill" href="/login" role="button">LOG IN</a></>
+                )}
             </div>
     </body>)
 }
