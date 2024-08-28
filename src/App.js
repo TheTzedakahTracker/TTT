@@ -19,9 +19,9 @@ function App() {
                 <Route path='/signup' element={<SignUp/>} />
                 <Route path='/' element={<MemberMain />} />
                 <Route path='/contact' element={<Contact/>}/>
-            <Route path='/test' element={<TestComp />} />
-            <Route path='/ai' element={<AI />} />
-            <Route path='/chatcomponent' element={<ChatComponent />} />
+                <Route path='/test' element={<TestComp />} />
+                <Route path='/ai' element={<AI />} />
+                <Route path='/chatcomponent' element={<ChatComponent />} />
             <Route path='/donate' element={<MakeDonation />} />
           </Routes>
         </Router>
