@@ -3,13 +3,18 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 import os
 #from models import  Users
 
 
 app = Flask(__name__)
+CORS(app)
+
 sql = "sql"
+
 bcrypt = Bcrypt(app)
+
 
 cwd = os.getcwd()
 
@@ -46,12 +51,12 @@ def get_name():
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    useremail = data['useremail']
+    email = data['email']
     password = data['password']
-    print('line 53 Received data:', useremail , password)
+    print('line 53 Received data:', email , password)
 
-    user = Users.query.filter_by(user_email=useremail).first()
-    is_valid = (user.user_pswd == password) and (user.user_email == useremail)
+    user = User.query.filter_by(user_email=email).first()
+    is_valid = (user.user_pswd == password) and (user.user_email == email)
     
     if is_valid:
         access_token = create_access_token(identity=user.user_id)
