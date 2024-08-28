@@ -6,7 +6,7 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 import os
 from models import  Users
-from config import  app
+from config import app
 
 #app = Flask(__name__)
 #CORS(app)

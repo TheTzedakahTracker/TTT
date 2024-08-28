@@ -94,10 +94,10 @@ def add_user():
         user_fname=data.get('firstname').strip(),
         user_mi=data.get('mi').strip(),
         user_lname=data.get('lastname').strip(),
-        user_email=data.get('emailAdd').strip(),
-        user_pswd=data.get('passw').strip(),
+        user_email=data.get('email').strip(),
+        user_pswd=data.get('password').strip(),
         #user_img_link=data.get('user_img'),
-        user_use_ai=data.get('ai')        
+        user_use_ai=data.get('aiAccepted')        
     )
     try:
         db.session.add(new_user)
