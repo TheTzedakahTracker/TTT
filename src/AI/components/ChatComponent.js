@@ -4,34 +4,46 @@
 //new york
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { queryModel } from '../services/geminiService';
 import { searchGCSE } from '../services/gcseService';
 import '../styling/ChatComponent.css';
 import ResponseCard from './ResponseCard';
+import FormPopup from './FormPopup';
+import tttLogo from '../../../src/tttLogo.png';
 
-// const SearchPopup = ({ onClose, searchResults }) => (
-//   <div className="popup-container">
-//     <div className="popup-content">
-//       <button className="close-btn" onClick={onClose}>Close</button>
-//       <div className="search-results">
-//         {searchResults.map((result, index) => (
-//           <div key={index} className="result-card">
-//             <a href={result.link} target="_blank" rel="noopener noreferrer">
-//               <h3>{result.title}</h3>
-//               <p>{result.snippet}</p>
-//             </a>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   </div>
-// );
 
 const ChatComponent = () => {
   const [userInput, setUserInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [context, setContext] = useState([]);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false); // New state for expansion
+
+  useEffect(() => {
+    // Automatically expand if the number of messages exceeds a threshold
+    const messageCount = messages.length;
+    if (messageCount > 5) {
+      setIsExpanded(true);
+    } else {
+      setIsExpanded(false);
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    // Manage the popup transition based on isPopupOpen
+    const handlePopupTransition = () => {
+      const overlay = document.querySelector('.popup-overlay');
+      if (isPopupOpen) {
+        overlay.classList.add('open');
+      } else {
+        overlay.classList.remove('open');
+      }
+    };
+
+    handlePopupTransition();
+  }, [isPopupOpen]);
 
 
   const handleSubmit = async (e) => {
@@ -40,6 +52,10 @@ const ChatComponent = () => {
     setMessages(newMessages);
     const newContext = [...context, { role: 'user', text: userInput }];
     setContext(newContext);
+    setIsPopupOpen(true);
+    setIsMinimized(false);
+    
+
     try {
       const geminiResponse = await queryModel(userInput, newContext);
       console.log('Gemini Response:', geminiResponse);
@@ -98,11 +114,54 @@ const ChatComponent = () => {
     setUserInput('');
   };
 
+  const togglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
+    setIsMinimized(false);
+  };
+
+  const toggleMinimize = () => {
+    setIsMinimized(!isMinimized);
+    if (isMinimized) {
+      setIsExpanded(true);
+    } else {
+      setIsExpanded(false);
+    }
+  };
+
+
 
   return (
-    <div className="chat-container">
-      <div className="chat-messages">
-        {messages.length > 0 ? (
+    <div className="chat-component">
+    
+      
+    <div className={`minimized-icon-container ${isPopupOpen ? '' : 'minimized'}`} onClick={togglePopup}>
+      <img
+        src={tttLogo}
+        alt="Chat Icon"
+        className="minimized-icon"
+      />
+    </div>
+    {!isMinimized && (
+    <div className={`popup-overlay ${isPopupOpen ? 'open' : 'minimized'}`}>
+    <div className="popup-container">
+      {/* <button onClick={openPopup} className="open-popup-btn">Open Search</button> */}
+      {/* <button onClick={togglePopup} className="close-btn">
+        {isPopupOpen ? '-' : '+'}
+      </button> */}
+      <FormPopup
+        isOpen={isPopupOpen}
+        // onClose={() => setIsPopupOpen(false)}
+        isMinimized={isMinimized}
+        togglePopup={togglePopup}
+        toggleMinimize={toggleMinimize}
+        userInput={userInput}
+        setUserInput={setUserInput}
+        handleSubmit={handleSubmit}
+        messages={messages}
+        minimizedIcon={tttLogo}
+      />
+            <div className={`popup-messages ${isExpanded ? 'expanded' : ''}`}>
+            {messages.length > 0 ? (
           messages.map((msg, index) => {
             if (msg.type === 'searchResults') {
               return msg.data.map((item, idx) => (
@@ -117,6 +176,8 @@ const ChatComponent = () => {
             } else {
             return (
               <div
+              key={index}
+              className={`message ${msg.role}`}
                 dangerouslySetInnerHTML={{ 
                   __html: `<strong>${msg.role === 'user' ? 'You' : 'API'}:</strong> ${
                     typeof msg.text === 'string' 
@@ -134,12 +195,13 @@ const ChatComponent = () => {
         }
       </div>
 
-      <form onSubmit={handleSubmit} className="chat-form">
+      <form onSubmit={handleSubmit} className="popup-form">
         <input
           type="text"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
           placeholder="Type your message here..."
+          className="chat-input"
         />
         
         <button type="submit" disabled={!userInput.trim()} className="chat-submit">
@@ -147,7 +209,11 @@ const ChatComponent = () => {
         </button>
       </form>
     </div>
+    </div>
+  )}
+</div>
   );
-};
+}
+
 
 export default ChatComponent;
