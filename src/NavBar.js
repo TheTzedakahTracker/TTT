@@ -1,32 +1,32 @@
-import ttt from './ttt.jpeg'
+import LogoImg from './LogoImg';
+import './NavBar.css'
+import React from 'react';
 
-function NavBar() {
-    return (
-        <nav className="navbar navbar-expand-lg bg-body-tertiary">
-            <div className="container">
-                <a className="navbar-brand" href="pass">
-                <img src={ttt} alt="TTT" width="75" height="75"/>
-                </a>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarNav">
-                <ul className="navbar-nav">
-                    <li className="nav-item">
-                    <a className="nav-link active" aria-current="page" href="pass">Home</a>
-                    </li>
-                    <li className="nav-item">
-                    <a className="nav-link" href="pass">Contact Us</a>
-                    </li>
-                    <li className="nav-item">
-                    <a className="nav-link" href='/login'>Log in</a>
-                    </li>
-                </ul>
-                </div>
-            </div>
-        </nav>
-
-    )
+function NavBar({ user, handleLogout }) {
+  
+    return (<>
+            <ul>
+                <li><a href='/'><LogoImg width='75px' height='75px'/></a></li>
+            <li><a className="active navWord" href="/">Home</a></li>
+            {user ? (
+                <>
+                <li><a className='navWord' href="/membermain">My Profile</a></li>
+                <li><a className='navWord' href="/contact">Contact</a></li>
+                <li>
+                  <span>Hello, {user.name}</span>
+                  <button onClick={handleLogout}>Logout</button>
+                </li>
+              </>
+            ) : (<>
+                    <li><a className='navWord' href="/login">Log In</a></li>
+                    <li><a className='navWord' href="/contact">Contact</a></li>
+                </>
+            )}
+                
+            </ul>
+</> );
 }
+
+    
 
 export default NavBar;

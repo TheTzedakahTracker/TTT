@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Dosis:wght@200..800&display=swap');
+
+.signUpBox {
+    border: black, 2px, solid;
+    border-radius: 15px;
+    padding:20px;
+    position: absolute;
+    top:15%;
+    left:15%;
+    width: 75%;
+    height: 80%;
+    font-family: 'Dosis', sans-serif;
+    font-size: larger;
+    background-color: white;
+}

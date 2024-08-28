@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Dosis:wght@200..800&display=swap');
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: white;
+    border-bottom: 2px black solid;
+    font-family: 'Dosis', sans-serif;
+    font-size: larger;
+  }
+ 
+li {
+    float: left;
+  }
+  
+.navWord {
+    display: block;
+    color: black;
+    text-align: bottom;
+    text-decoration: none;
+    padding: 26px 26px;
+    font-weight: bolder;
+  }
+  
+.navWord:hover {
+    background-color: rgba(92, 103, 157, 0.712);
+  }
+/* rgba(134, 142, 179, 0.689) */
