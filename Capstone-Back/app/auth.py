@@ -5,11 +5,11 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 import os
-#from models import  Users
+from models import  Users
+from config import  app
 
-
-app = Flask(__name__)
-CORS(app)
+#app = Flask(__name__)
+#CORS(app)
 
 sql = "sql"
 
@@ -29,7 +29,7 @@ app.config['JWT_TOKEN_LOCATION'] = ['headers']
 app.config['SQLALCHEMY_DATABASE_URI'] = jconfig['db_link']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+#db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
 
@@ -55,7 +55,7 @@ def login():
     password = data['password']
     print('line 53 Received data:', email , password)
 
-    user = User.query.filter_by(user_email=email).first()
+    user = Users.query.filter_by(user_email=email).first()
     is_valid = (user.user_pswd == password) and (user.user_email == email)
     
     if is_valid:

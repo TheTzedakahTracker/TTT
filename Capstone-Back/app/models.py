@@ -1,4 +1,4 @@
-from auth import db
+from config import db
 
 class Users(db.Model):
     __tablename__ = 'users'
@@ -51,7 +51,7 @@ class Donations(db.Model):
     donation_date = db.Column(db.Date, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     org_id = db.Column(db.Integer, db.ForeignKey('organizations.org_id'), nullable=False)
-    donation_amt = db.Column(db.Numeric, nullable=False)
+    donation_amt = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
     donation_sh_note = db.Column(db.String(255))
 
 class AppliedFundsDonation(db.Model):

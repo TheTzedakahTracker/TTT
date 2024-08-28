@@ -4,9 +4,9 @@ from sqlalchemy import func
 from flask_cors import CORS
 import re
 import datetime
-from auth import db, app
+from config import app
 # Correct import path if 'models.py' is in the 'app' package
-from models import  Users, Donations, AppliedFundsDonation, Organizations, UserFunds, UsersOrgPref
+from models import  db, Users, Donations, AppliedFundsDonation, Organizations, UserFunds, UsersOrgPref
 import logging
 
 
