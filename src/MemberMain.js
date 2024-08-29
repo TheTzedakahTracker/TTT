@@ -1,14 +1,15 @@
 
-import LogoImg from './LogoImg';
 import MyProfile from './MyProfile'
 import './MemberMain.css';
+import Layout from './AI/components/Layout';
 
 
 
 function MemberMain(props){
 
-    return(
+    return (
         <>
+            <Layout>
         <div className="container-fluid ">
             <div className="row">
                 <div >
@@ -16,23 +17,8 @@ function MemberMain(props){
                 
                 </div>
             </div>
-<<<<<<< HEAD
-        </div>
-=======
-
-            <div>
-                <p>Donated this year:</p>
-                <p>Funds available for Donating:</p>
-            </div>
-
-
-            <div>
-                <button>New Donation</button>
-                {/* onClick={handleClick} */}
-
-            </div>
-          {/* <div>{showDonation && <MakeDonation />}</div> */}
->>>>>>> 5feb3bd (toMerge)
+                </div>
+                </Layout>
         </>
     );//end return
 

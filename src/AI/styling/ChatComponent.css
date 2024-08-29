@@ -103,8 +103,7 @@
     /* align-items: flex-end; */
     transition: transform 0.3s ease; /* Smooth transition for expanding */
     /* align-items: center; */
-    z-index: 1000; /* Ensure the popup is on top of other content */
-    
+    z-index: 1000; 
   }
 
   .popup-overlay.minimized {
@@ -148,7 +147,7 @@
     box-shadow: 0 4px 8px rgba(9, 31, 235, 0.2); /* Optional shadow for better visibility */
     display: flex;
     flex-direction: column;
-    z-index: 1000; /* Ensure it's on top of other content */
+    z-index: 1001;
     /* flex: 1; */
     transition: transform 0.3s ease;
   }
@@ -177,7 +176,7 @@
     overflow-y: auto;
     margin-bottom: 10px;
     padding-right: 10px;
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    background-color: rgb(255, 255, 255);
     transition: max-height 0.3s ease; /* Smooth transition for expanding */
     min-height: 200px; /* Minimum height for initial state */
     max-height: calc(100% - 70px); /* Initial height considering form and padding */

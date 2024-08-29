@@ -74,10 +74,13 @@ const ChatComponent = () => {
         const formattedResponse = searchResults.length
           ? searchResults.map(item => `${item.title} - ${item.snippet}\n${item.link}`).join('\n\n')
           : 'No results found.';
+        // = searchResults.length
+        //   ? searchResults.map(item => `${item.title} - ${item.snippet}\n${item.link}`).join('\n\n')
+        //   : 'No results found.';
           console.log('Formatted Response:', formattedResponse);
 
           const finalResponse = await queryModel(
-            `Search within the orthodox jewish world based on the following paramaters: respect for the fact that this community is very sensitive to their own culture and needs. Please keep all results kosher and within the paramaters of jewish law. And the results shouldn't include an intro to the results being displayed, but rather have displayed the results only with the organization name, link to the organization and description of the organization. If the user asks any questions unrelated to organizations, handle their questions gracefully but respond that its not what our chatbot is about: ${formattedResponse}`, 
+            `Search within the orthodox jewish world based on the following paramaters: respect for the fact that this community is very sensitive to their own culture and needs. Please keep all results kosher and within the paramaters of jewish law. And the results shouldn't include an intro to the results being displayed, but rather have displayed the results only with the organization title as title, description as snippet and link to the organization as link. If the user asks any questions unrelated to organizations, handle their questions gracefully but respond that its not what our chatbot is about: ${formattedResponse}`, 
             newContext
         );
         console.log('Final Gemini Response:', finalResponse);
@@ -85,8 +88,9 @@ const ChatComponent = () => {
           
         setMessages(prevMessages => [
           ...prevMessages,
-          { role: 'api', text: finalResponse.text  }
+         { role: 'api', text: finalResponse.text }
         ]);
+      
   
         setContext(prevContext => [
           ...prevContext,
