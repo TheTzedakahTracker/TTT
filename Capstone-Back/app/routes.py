@@ -6,10 +6,13 @@ from config import app
 # Correct import path if 'models.py' is in the 'app' package
 from models import  db, Users, Donations, AppliedFundsDonation, Organizations, UserFunds, UsersOrgPref
 import logging, decimal, re, datetime
+# from flask_bcrypt import Bcrypt
 
 
-#app = Flask(__name__)
-CORS(app)
+# app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
+# db = SQLAlchemy(app)
+# bcrypt = Bcrypt(app)
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://root:Jerusalem_84@localhost/tzedaka_tracker'
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -109,9 +112,11 @@ def add_user():
     if not isinstance(data.get('lastName'), str):
         return jsonify({'error': 'Invalid last name'}), 400
     if not isinstance(data.get('password'), str):
-        return jsonify({'error': 'password'}), 400
-    if not isinstance(data.get('aiAccepted'), bool):
-        return jsonify({'error': 'ai_tag'}), 400
+        return jsonify({'error': 'pass'}), 400
+    #if not isinstance(data.get('ai'), bool):
+        #return jsonify({'error': 'ai_tag'}), 400
+    ai_accepted = data.get('aiAccepted', False)
+
 
     new_user = Users(
         user_fname=data.get('firstName').strip(),
@@ -131,6 +136,8 @@ def add_user():
         db.session.rollback()
         #app.logger.info(e)
         return jsonify({"message": "issue adding user!"})
+    
+    
 
 
 @app.route('/get_all_funds/<int:userid>', methods= ['GET'])
@@ -322,7 +329,7 @@ def get_organization_list(userid):
     #      return jsonify({"error": str(e)}), 500
 
 
-@app.route('/routes', methods=['GET'])
+@app.route('/get_routes', methods=['GET'])
 def get_routes():
     return jsonify({rule.rule: rule.endpoint for rule in app.url_map.iter_rules()})
 
