@@ -7,13 +7,16 @@ import App from './App';
 import NavBar from './NavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AIApp from './AIApp';
+import { UserProvider } from './UserContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));//Uses ReactDOM.createRoot to create a root to render the application into. This is part of Concurrent Mode in React.
 root.render(
-  <React.StrictMode>
-    <App />
-    <AIApp />
-  </React.StrictMode>
+  <UserProvider>
+    <React.StrictMode>
+      <App />
+      <AIApp />
+    </React.StrictMode>
+  </UserProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

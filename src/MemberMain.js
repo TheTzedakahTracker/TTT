@@ -13,6 +13,7 @@ function MemberMain(props){
             <div className="row">
                 <div >
                 <MyProfile id={props.user} />
+                
                 </div>
             </div>
 <<<<<<< HEAD

@@ -4,7 +4,6 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from flask_bcrypt import Bcrypt
 from models import  Users
 from config import app, jconfig
-import logging
 
 sql = "sql"
 
@@ -36,7 +35,6 @@ def get_name():
 
 @app.route('/login', methods=['POST'])
 def login():
-    logging.info('in login')
     data = request.get_json()
     email = data['email']
     password = data['password']
@@ -47,7 +45,7 @@ def login():
     
     if is_valid:
         access_token = create_access_token(identity=user.user_id)
-        return jsonify({'message': 'Login Success', 'id': user.user_id, 'name': user.user_fname + ' ' + user.user_lname, 'access_token': access_token})
+        return jsonify({'message': 'Login Success', 'access_token': access_token})
     else:
         return jsonify({'message': 'Login Failed'}), 401
 

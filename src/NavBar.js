@@ -1,6 +1,7 @@
 import LogoImg from './LogoImg';
 import './NavBar.css'
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function NavBar({ user, name, handleLogout }) {
   
@@ -10,7 +11,7 @@ function NavBar({ user, name, handleLogout }) {
             <li><a className="active navWord" href="/">Home</a></li>
             {user ? (
                 <>
-                <li><a className='navWord' href="/membermain">My Profile</a></li>
+                <li><Link to={{pathname: '/membermain',state: { id: user }}} className='navWord'>My Profile</Link></li>
                 <li><a className='navWord' href="/contact">Contact</a></li>
                 <li>
                   {/* <span>Hello, {user}</span> */}

@@ -1,29 +1,42 @@
-from flask import Flask, request, jsonify
-#from flask_sqlalchemy import SQLAlchemy
+from flask import request, jsonify
+
 from sqlalchemy import func
-from flask_cors import CORS
-from config import app
-# Correct import path if 'models.py' is in the 'app' package
+from config import app, jconfig
+from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, get_jwt
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from models import  db, Users, Donations, AppliedFundsDonation, Organizations, UserFunds, UsersOrgPref
-import logging, decimal, re, datetime
-# from flask_bcrypt import Bcrypt
+import logging, re, datetime
 
-
-# app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
-# db = SQLAlchemy(app)
-# bcrypt = Bcrypt(app)
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://root:Jerusalem_84@localhost/tzedaka_tracker'
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://webuser:IceCream*8@localhost/tzedaka_tracker'
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#db = SQLAlchemy(app)
+#for login
+bcrypt = Bcrypt(app)
+# Configuration
+app.config['SECRET_KEY'] = jconfig['secretkey']
+app.config["JWT_SECRET_KEY"] = jconfig['jwtsecretkey']
+app.config['JWT_TOKEN_LOCATION'] = ['headers']
+jwt = JWTManager(app)
 
 logging.basicConfig(level=logging.DEBUG)
 # Create the table initially
 #with app.app_context():
     #db.create_all()
+ 
+@app.route('/login', methods=['POST'])
+def login():
+    logging.info('in login')
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
+
+    user = Users.query.filter_by(user_email=email).first()
+    is_valid = (user.user_pswd == password) and (user.user_email == email)
+    
+    if is_valid:
+        access_token = create_access_token(identity=user.user_id)
+        return jsonify({'message': 'Login Success', 'id': user.user_id, 'name': user.user_fname + ' ' + user.user_lname, 'access_token': access_token})
+    else:
+        return jsonify({'message': 'Login Failed'}), 401
+    
 #function that checks if an email entry is valid
 def invalid_email(email):
     pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
@@ -148,23 +161,25 @@ def get_total_funds_for_a_user(userid):
 @app.route('/donate', methods=['POST'])
 def donate():
     data = request.get_json()
+    thisDonation = Donations()
     
-    
-    if not isinstance(data.get('userid'), int):
+    if isinstance(data.get('userid'), int) or data.get('userid').isdigit():
+        thisDonation.user_id = int(data.get('userid'))
+    else:
         return jsonify({'error': 'Invalid userid'}), 400
-    if not isinstance(data.get('orgid'), int):
+    if isinstance(data.get('orgid'), int) or data.get('orgid').isdigit():
+        thisDonation.org_id = int(data.get('orgid'))
+    else:
         return jsonify({'error': 'Invalid organizationid'}), 400
-    if not isinstance(data.get('amount'), float):
+
+        
+    if isinstance(data.get('amount'), int) or isinstance(data.get('amount'), float) or data.get('amount').replace('.', '', 1).isdigit():
+        thisDonation.donation_amt = float(data.get('amount'))
+    else:
         return jsonify({'error': 'Invalid Amount'}), 400
-    if not isinstance(data.get('note'), str):
-        return jsonify({'error': 'Invalid Note'}), 400
+    if isinstance(data.get('note'), str):
+        thisDonation.donation_sh_note = data.get('note')  
     
-    thisDonation = Donations(
-        user_id = data.get('userid'),
-        org_id = data.get('orgid'),
-        donation_amt = data.get('amount'),
-        donation_sh_note = data.get('note')        
-    )
     
     if is_date(data.get('dDate')):
         thisDonation.donation_date = datetime.datetime.strptime(data.get('dDate'), '%m/%d/%Y').date()
@@ -174,19 +189,21 @@ def donate():
     #check if there are funds available for this transaction
     # funds_available = db.session.query(func.sum(UserFunds.uf_amount)).filter(UserFunds.user_id == thisDonation.user_id).scalar() 
     # total_donations = db.session.query(func.sum(Donations.donation_amt)).filter(Donations.user_id == thisDonation.user_id).scalar()   
-
+    logging.info(thisDonation.donation_amt)
+    logging.info(total_donations(thisDonation.user_id))
+    logging.info(funds_available(thisDonation.user_id))
     # if(thisDonation.donation_amt + total_donations(thisDonation.user_id) > funds_available(thisDonation.user_id)):
     #     return jsonify({'Not enough funds available to make this donation'})
     if(thisDonation.donation_amt + total_donations(thisDonation.user_id) > funds_available(thisDonation.user_id)):
-         return jsonify({'Not enough funds available to make this donation'})
-    
+        return jsonify({"message": "Not enough funds available to make this donation"})
+
     #insert into donation table
     try:
         db.session.add(thisDonation)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        return jsonify("error: error adding organization data")
+        return jsonify({"error": "error adding organization data"})
     
     
     if (data.get('fund_id')):
@@ -201,8 +218,8 @@ def donate():
             db.session.commit()
         except:
             db.session.rollback()
-            return jsonify({"error: adding org to fund"})
-    return ('done')
+            return jsonify({"error": "adding org to fund"})
+    return jsonify({"message": "Donation Successfully added"})
 @app.route('/add_organization', methods=['POST'])
 def add_organization():
     logging.info('in org func')
@@ -213,9 +230,9 @@ def add_organization():
          return ('there is error in adding org:')
     
     if not isinstance(data.get('oName'),str) or len(data.get('oName')) < 0:
-         return jsonify({'error: organization name invalid'})
+         return jsonify({'error': 'organization name invalid'})
     if not isinstance(data.get('oDesc'),str):
-        return jsonify({'error: description invalid'})
+        return jsonify({'error': 'description invalid'})
     
     new_org = Organizations(
          org_name = data.get('oName'),
@@ -234,50 +251,55 @@ def add_organization():
         db.session.rollback()
         return("error: ", e)
     # # if you want to assosiate this organization with a specific user
+    
     if 'userid' in data:
         thispref = UsersOrgPref(
         user_id = data.get('userid'),
         org_id = new_org.org_id
        )
-    try:
-        db.session.add(thispref)
-        db.session.commit()
-    except Exception as e:
-        db.rollback()
-        return jsonify({"error: issue adding organization preference"})
-    return jsonify('organization added')
+        try:
+            db.session.add(thispref)
+            db.session.commit()
+        except Exception as e:
+            db.rollback()
+            return jsonify({"error": "issue adding organization preference"})
+
+    return jsonify({'message':'organization added'})
                 
 @app.route('/add_funds', methods=['POST'])          
 def add_userfunds():
     data = None
+    new_funds = UserFunds()
     try:
          data = request.get_json()
     except Exception as e:
          return ('there is error in adding funds:')   
+    logging.info('got here1')
+    if isinstance(data.get('userid'), int) or data.get('userid').isdigit():
+        new_funds.user_id = int(data.get('userid'))
+    else:
+        return jsonify({'error': 'Invalid userid'}), 400
+    if isinstance(data.get('fAmount'), int) or isinstance(data.get('amount'), float) or data.get('fAmount').replace('.', '', 1).isdigit():
+        new_funds.uf_amount = float(data.get('fAmount'))
+    else:
+        return jsonify({'error': 'Invalid Amount'}), 400
+    if isinstance(data.get('fDesc'), str):
+        new_funds.uf_description = data.get('fDesc')
+    else:
+        return jsonify({'error':'Invalid Description'})
+    logging.info('got here2')
     
-    if not isinstance(data.get('userid'), int):
-        return jsonify({'Invalid user'})
-    if not isinstance(data.get('fAmount'), float):
-        return jsonify({'Invalid fund amount'})
-    if not isinstance(data.get('fDesc'), str):
-        return jsonify({'Invalid Description'})
-    
-    new_funds = UserFunds(
-        user_id = data.get('userid'),
-        uf_description = data.get('fDesc'),
-        uf_amount = data.get('fAmount')        
-    )
     if (is_date(data.get('fDate'))):
         new_funds.uf_date_added = datetime.datetime.strptime(data.get('fDate'), '%m/%d/%Y').date()
     else:
         new_funds.uf_date_added = datetime.datetime.now().date()
-  
+    logging.info('got here3')
     try:
         db.session.add(new_funds)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-    return jsonify('funds added')
+    return jsonify({'message':'funds added'})
 
 #route to get organizations
 @app.route('/get__all_organizations/<int:userid>', methods= ['GET'])
@@ -309,7 +331,7 @@ def get_organization_list(userid):
         
         return jsonify(result_list)
     except Exception as e:
-        return jsonify({'error getting data for oganizations'})
+        return jsonify({'error':' getting data for oganizations'})
 #@app.route('/get__donations/<int:userid>', methods= ['GET'])
 #def get_organization_list(userid):    
     #user_id = request.args.get('user_id')
