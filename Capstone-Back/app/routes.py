@@ -1,7 +1,6 @@
 from flask import request, jsonify
 
 from sqlalchemy import func
-
 from config import app, jconfig
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, get_jwt
@@ -15,7 +14,6 @@ bcrypt = Bcrypt(app)
 app.config['SECRET_KEY'] = jconfig['secretkey']
 app.config["JWT_SECRET_KEY"] = jconfig['jwtsecretkey']
 app.config['JWT_TOKEN_LOCATION'] = ['headers']
-
 jwt = JWTManager(app)
 
 logging.basicConfig(level=logging.DEBUG)
@@ -127,9 +125,11 @@ def add_user():
     if not isinstance(data.get('lastName'), str):
         return jsonify({'error': 'Invalid last name'}), 400
     if not isinstance(data.get('password'), str):
-        return jsonify({'error': 'password'}), 400
-    if not isinstance(data.get('aiAccepted'), bool):
-        return jsonify({'error': 'ai_tag'}), 400
+        return jsonify({'error': 'pass'}), 400
+    #if not isinstance(data.get('ai'), bool):
+        #return jsonify({'error': 'ai_tag'}), 400
+    ai_accepted = data.get('aiAccepted', False)
+
 
     new_user = Users(
         user_fname=data.get('firstName').strip(),
@@ -149,6 +149,8 @@ def add_user():
         db.session.rollback()
         #app.logger.info(e)
         return jsonify({"message": "issue adding user!"})
+    
+    
 
 
 @app.route('/get_all_funds/<int:userid>', methods= ['GET'])
@@ -349,7 +351,7 @@ def get_organization_list(userid):
     #      return jsonify({"error": str(e)}), 500
 
 
-@app.route('/routes', methods=['GET'])
+@app.route('/get_routes', methods=['GET'])
 def get_routes():
     return jsonify({rule.rule: rule.endpoint for rule in app.url_map.iter_rules()})
 

@@ -14,6 +14,7 @@ import { UserContext} from './UserContext';
 
 
 function App() {
+
   const { user, setUser } = useContext(UserContext);
   const [name, setName] = useState(null);
 

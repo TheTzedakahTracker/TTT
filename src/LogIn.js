@@ -2,8 +2,6 @@ import { useNavigate } from 'react-router';
 import './LogIn.css';
 import React, { useState } from 'react';
 
-
-
 function LogIn({setUser, setName}) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -29,7 +27,6 @@ function LogIn({setUser, setName}) {
             const data = await response.json();
             setUser(data.id);
             setName(data.name);
-
             window.sessionStorage.setItem("isLoggedIn", "True");
             navigate('/')
           } else {

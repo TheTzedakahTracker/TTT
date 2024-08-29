@@ -23,7 +23,7 @@ function SignUp() {
             },
             body: JSON.stringify({ firstName, lastName, email, password, aiAccepted }),
         });
-
+console.log(JSON.stringify({ firstName, lastName, email, password, aiAccepted }))
         if (response.ok) {
             const data = await response.json();
             setSuccessMsg(data.message); 
