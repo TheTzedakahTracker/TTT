@@ -15,7 +15,7 @@ function LogIn({setUser}) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const backendUrl = '';
+        const backendUrl = 'http://localhost:5000/login';
     
         try {
           const response = await fetch(backendUrl, {

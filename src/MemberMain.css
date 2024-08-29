@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Dosis:wght@200..800&display=swap');
+
+.box {
+    border: black, 2px, solid;
+    border-radius: 15px;
+    padding:20px;
+    position: absolute;
+    top:15%;
+    left:15%;
+    width: 75%;
+    height: 80%;
+    font-family: 'Dosis', sans-serif;
+    font-size: larger;
+    background-color: white;
+}
+.myinfo{
+    border: black, 2px, solid;
+    border-radius: 15px;
+    color: #444E8A;
+    background-color: #f6f6f8;
+    font-family: 'Dosis', sans-serif;
+    font-weight: 500;
+    font-size: 1.5rem; 
+    white-space: nowrap;
+    position: absolute;
+    right: 0;
+    margin-top: 2rem;
+}
+.blacktext{
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+
+}
+
+.margin-top-large {
+    margin-top: 12rem;
+}

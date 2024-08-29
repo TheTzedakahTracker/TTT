@@ -1,13 +1,11 @@
 from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from flask_cors import CORS
-import re
-import datetime
 from config import app
 # Correct import path if 'models.py' is in the 'app' package
 from models import  db, Users, Donations, AppliedFundsDonation, Organizations, UserFunds, UsersOrgPref
-import logging
+import logging, decimal, re, datetime
 
 
 #app = Flask(__name__)
@@ -40,6 +38,14 @@ def is_date(date):
     else:
         return False
 
+#get total funds for a user
+def funds_available (userid):
+    return float(db.session.query(func.sum(UserFunds.uf_amount)).filter(UserFunds.user_id == userid).scalar() or 0)
+
+#get total dinations for a user
+def total_donations(userid):
+    return float(db.session.query(func.sum(Donations.donation_amt)).filter(Donations.user_id == userid).scalar() or 0)
+    
 #function to check if email is in the database
 def check_if_email_exists(email):
     user = Users.query.filter_by(user_email=email).first()
@@ -61,6 +67,23 @@ def get_a_user(userid):
             "img_link":user.user_img_link,
             "email": user.user_email,
             "ai":user.user_use_ai
+        }), 200
+    else:
+        return jsonify({"error": "User not found"}), 404
+
+@app.route('/get_profile/<int:userid>', methods=['GET'])
+def get_profile(userid):
+    user = Users.query.get(userid)
+    if user:
+        fundsavailable = (funds_available(user.user_id)-total_donations(user.user_id))
+
+        #fundsavailable = 200.52
+        return jsonify({
+            "userid": user.user_id,
+            "firstname": user.user_fname,
+            "lastname": user.user_lname,
+            "mi": user.user_mi,
+            "availablefunds": fundsavailable
         }), 200
     else:
         return jsonify({"error": "User not found"}), 404
@@ -142,10 +165,13 @@ def donate():
         thisDonation.donation_date = datetime.datetime.now().date()
         
     #check if there are funds available for this transaction
-    funds_available = db.session.query(func.sum(UserFunds.uf_amount)).filter(UserFunds.user_id == thisDonation.user_id).scalar() 
-    total_donations = db.session.query(func.sum(Donations.donation_amt)).filter(Donations.user_id == thisDonation.user_id).scalar()   
-    if(thisDonation.donation_amt + total_donations > funds_available):
-        return jsonify({'Not enough funds available to make this donation'})
+    # funds_available = db.session.query(func.sum(UserFunds.uf_amount)).filter(UserFunds.user_id == thisDonation.user_id).scalar() 
+    # total_donations = db.session.query(func.sum(Donations.donation_amt)).filter(Donations.user_id == thisDonation.user_id).scalar()   
+
+    # if(thisDonation.donation_amt + total_donations(thisDonation.user_id) > funds_available(thisDonation.user_id)):
+    #     return jsonify({'Not enough funds available to make this donation'})
+    if(thisDonation.donation_amt + total_donations(thisDonation.user_id) > funds_available(thisDonation.user_id)):
+         return jsonify({'Not enough funds available to make this donation'})
     
     #insert into donation table
     try:
@@ -156,19 +182,20 @@ def donate():
         return jsonify("error: error adding organization data")
     
     
-    thisafd = AppliedFundsDonation(
-        donation_id = thisDonation.donation_id,
-        uf_id = data.get('fundid')
-    )
-    
-    #insert into applied_funds_donation table - apply this donation to a specific fund entry
-    try:
-        db.session.add(thisafd)
-        db.session.commit()
-    except:
-        db.session.rollback()
-        return jsonify({"error: adding org to fund"})
-    
+    if (data.get('fund_id')):
+        thisafd = AppliedFundsDonation(
+            donation_id = thisDonation.donation_id,
+            uf_id = data.get('fundid')
+        )
+        
+        #insert into applied_funds_donation table - apply this donation to a specific fund entry
+        try:
+            db.session.add(thisafd)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            return jsonify({"error: adding org to fund"})
+    return ('done')
 @app.route('/add_organization', methods=['POST'])
 def add_organization():
     logging.info('in org func')
@@ -244,7 +271,44 @@ def add_userfunds():
     except Exception as e:
         db.session.rollback()
     return jsonify('funds added')
-    
+
+#route to get organizations
+@app.route('/get__all_organizations/<int:userid>', methods= ['GET'])
+def get_organization_list(userid):
+    try:
+        result = (
+            db.session.query(
+                Organizations.org_id,
+                Organizations.org_name,
+                UsersOrgPref.user_org_id,
+                UsersOrgPref.user_id
+            )
+            .outerjoin(UsersOrgPref, Organizations.org_id == UsersOrgPref.org_id)
+            .filter(
+                (UsersOrgPref.user_id == userid) | (UsersOrgPref.user_org_id == None)
+            )
+            .all()
+        )
+        
+        # Converting the result to a list of dictionaries
+        result_list = []
+        for row in result:
+            result_list.append({
+                'org_id': row[0],
+                'org_name': row[1],
+                'user_org_id': row[2],
+                'user_id': row[3],
+            })
+        
+        return jsonify(result_list)
+    except Exception as e:
+        return jsonify({'error getting data for oganizations'})
+#@app.route('/get__donations/<int:userid>', methods= ['GET'])
+#def get_organization_list(userid):    
+    #user_id = request.args.get('user_id')
+    # organization = request.args.get('organization')
+    # start_date = request.args.get('startDate')
+    # end_date = request.args.get('endDate')
     # try:
     #      users = Users.query.all()
     #      users_list = [{
