@@ -15,23 +15,25 @@ import MakeDonation from "./MakeDonation";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [name, setName] = useState(null);
+  
 
   const handleLogout = () => {
     setUser(null);
   };
     return (
       <Router>
-        <NavBar user={user} handleLogout={handleLogout}/>
+        <NavBar user={user} name={name} handleLogout={handleLogout}/>
             <Routes>
           <Route path='/' element={<HomePage user={user} handleLogout={handleLogout}/>} />
                 <Route
                   path='/login'
-                  element= {user ? <Navigate to="/" /> : <LogIn setUser={setUser} />}
+                  element= {user ? <Navigate to="/" /> : <LogIn setUser={setUser} setName={setName} />}
                 />
                 <Route path='/signup' element={<SignUp />} />
                 <Route path='/donationhistory' element={<DonationHistory/>}/>
 
-                <Route path='/membermain' element={<MemberMain/>} />
+                <Route path='/membermain' element={<MemberMain user={user} />} />
 
                 <Route
                   path='/membermain'

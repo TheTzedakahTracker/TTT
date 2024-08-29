@@ -7,10 +7,6 @@ function SignUp() {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [address, setAddress] = useState('');
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [zip, setZip] = useState('');
     const [aiAccepted, setAiAccepted] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
@@ -20,14 +16,14 @@ function SignUp() {
     const handleSignUp = async (event) => {
         event.preventDefault();
 
-        const response = await fetch('#', {
+        const response = await fetch('http://127.0.0.1:5000/add_user', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ firstName, lastName, email, password, address, city, state, zip, aiAccepted }),
+            body: JSON.stringify({ firstName, lastName, email, password, aiAccepted }),
         });
-
+console.log(JSON.stringify({ firstName, lastName, email, password, aiAccepted }))
         if (response.ok) {
             const data = await response.json();
             setSuccessMsg(data.message); 
@@ -92,54 +88,6 @@ function SignUp() {
                             id="inputPassword3"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            required/>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label htmlFor="inputAddress" class="col-sm-2 col-form-label">Address:</label>
-                    <div class="col-md-6">
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="inputAddress"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                            required/>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label htmlFor="inputCity" class="col-sm-2 col-form-label">City:</label>
-                    <div class= "col-md-4">
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="inputCity"
-                            value={city}
-                            onChange={(e) => setCity(e.target.value)}
-                            required/>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label htmlFor="inputState" class="col-sm-2 col-form-label">State:</label>
-                    <div class="col-md-3">
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="inputState"
-                            value={state}
-                            onChange={(e) => setState(e.target.value)}
-                            required />
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label htmlFor="inputZip" class="col-sm-2 col-form-label">Zip:</label>
-                    <div class="col-md-2">
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="inputZip"
-                            value={zip}
-                            onChange={(e) => setZip(e.target.value)}
                             required/>
                     </div>
                 </div>

@@ -15,7 +15,23 @@ function MemberMain(props){
                 <MyProfile id={props.user} />
                 </div>
             </div>
+<<<<<<< HEAD
         </div>
+=======
+
+            <div>
+                <p>Donated this year:</p>
+                <p>Funds available for Donating:</p>
+            </div>
+
+
+            <div>
+                <button>New Donation</button>
+                {/* onClick={handleClick} */}
+
+            </div>
+          {/* <div>{showDonation && <MakeDonation />}</div> */}
+>>>>>>> 5feb3bd (toMerge)
         </>
     );//end return
 

@@ -2,7 +2,7 @@ import LogoImg from './LogoImg';
 import './NavBar.css'
 import React from 'react';
 
-function NavBar({ user, handleLogout }) {
+function NavBar({ user, name, handleLogout }) {
   
     return (<>
             <ul>
@@ -13,8 +13,8 @@ function NavBar({ user, handleLogout }) {
                 <li><a className='navWord' href="/membermain">My Profile</a></li>
                 <li><a className='navWord' href="/contact">Contact</a></li>
                 <li>
-                  <span>Hello, {user.name}</span>
-                  <button onClick={handleLogout}>Logout</button>
+                  {/* <span>Hello, {user}</span> */}
+                  <button className='navWord' onClick={handleLogout}>Logout</button>
                 </li>
               </>
             ) : (<>
