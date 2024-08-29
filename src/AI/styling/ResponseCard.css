@@ -1,26 +1,29 @@
-.response-card {
-    border: 1px solid #ddd;
+/* .response-card {
+    border: 1px solid #000000;
     border-radius: 8px;
-    padding: 16px;
-    margin: 8px;
-    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 10px;
+    background-color: #fff;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: box-shadow 0.3s ease;
   }
   
   .response-card:hover {
-    transform: translateY(-5px);
-    background-color: #f1f1f1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
   }
   
   .response-title {
     font-size: 18px;
     font-weight: bold;
-    margin-bottom: 8px;
+    margin: 0;
+    color: #333;
+
   }
   
   .response-snippet {
+    margin: 5px 0;
     font-size: 14px;
     color: #666;
   }
-  
+   */

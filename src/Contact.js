@@ -2,7 +2,7 @@ import phone from './phone.png'
 import mail from './mail.png'
 import './Contact.css'
 
-function Contact() {
+function Contact({user}) {
     return (<>
         <div className='contact'>
             <h4>We are happy to help our users!</h4><br/>

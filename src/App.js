@@ -30,7 +30,7 @@ function App() {
               <Route path='/signup' element={<SignUp />} />
               <Route path='/donationhistory' element={<DonationHistory/>}/>
               <Route path='/membermain' element= {user ? <MemberMain user={user} /> : <Navigate to="/login" />}/>
-              <Route path='/contact' element={<Contact/>}/>
+              <Route path='/contact' element={<Contact user={user} />}/>
               <Route path='/ai' element={<AI />} />
               <Route path='/chatcomponent' element={<ChatComponent />} />
             </Routes>
