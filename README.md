@@ -20,7 +20,7 @@ For the front end we used React and Flask for the backend communicating via api 
 
 # To start the program: 
 Backend: 
-To run the backend please see the requirements.txt and install via pip all the python packages. Then run the manage.py to run all relevant scrips. 
+To run the backend please see the requirements.txt and install via pip all the python packages. Then run the routes.py to run all relevant scrips. 
 
 Front End:
 

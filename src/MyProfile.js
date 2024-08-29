@@ -3,6 +3,7 @@ import CreateOrganization from './CreateOrganization';
 import MakeDonation from './MakeDonation';
 import AddFunds from './AddFunds';
 import './MemberMain.css';
+import DonationHistory from './DonationHistory';
 
 export default function MyProfile(props) {
   const [userInfo, setUserInfo] = useState(null);
@@ -33,20 +34,30 @@ export default function MyProfile(props) {
   const toggleDonateComponent = () => {
     setShowOrganizations(false);
     setShowFunds(false);
+    setShowHistory(false);
     setShowDonate(!showDonate);
-    
+  
   };
   const toggleOrganizationComponent = () => {
     setShowDonate(false);
     setShowFunds(false);
+    setShowHistory(false);
     setShowOrganizations(!showOrganizations);
   };
   
   const toggleFundsComponent = () => {
     setShowDonate(false);
     setShowOrganizations(false)
+    setShowHistory(false);
     setShowFunds(!showFunds);
   };
+
+  const toggleHistoryComponent = () => {
+    setShowDonate(false);
+    setShowOrganizations(false)
+    setShowFunds(false);
+    setShowHistory(!showHistory);
+  }
 
   return (
     <div>
@@ -73,7 +84,7 @@ export default function MyProfile(props) {
             <button onClick={toggleOrganizationComponent} style={{ backgroundColor: '#444E8A', color: 'white', padding: '10px 20px', margin: '1rem', border: 'none', borderRadius: '5rem' }}>Add a New Organization</button>
             </div>
             <div className="col-2">
-            <button style={{ backgroundColor: '#444E8A', color: 'white', padding: '10px 20px', margin: '1rem', border: 'none', borderRadius: '5rem' }}>Donation History</button>
+            <button onClick={toggleHistoryComponent} style={{ backgroundColor: '#444E8A', color: 'white', padding: '10px 20px', margin: '1rem', border: 'none', borderRadius: '5rem' }}>Donation History</button>
             </div>
             <div className="col-2"></div>
           </div>
@@ -84,6 +95,7 @@ export default function MyProfile(props) {
         {showDonate && <MakeDonation id={props.id} />}
         {showOrganizations && <CreateOrganization id={props.id} />}
             {showFunds && <AddFunds id={props.id} setShowFunds={setShowFunds} />}
+            {showHistory && <DonationHistory id={props.id} />}
         </div>
         </>
 
