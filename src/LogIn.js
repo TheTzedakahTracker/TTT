@@ -4,12 +4,11 @@ import React, { useState } from 'react';
 
 
 
-
-
-function LogIn({setUser}) {
+function LogIn({setUser, setName}) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+
 
     const navigate = useNavigate()
 
@@ -28,9 +27,13 @@ function LogIn({setUser}) {
     
           if (response.ok) {
             const data = await response.json();
-            setUser(data);
+            setUser(data.id);
+            setName(data.name);
+
+            window.sessionStorage.setItem("isLoggedIn", "True");
             navigate('/')
           } else {
+            window.sessionStorage.setItem("isLoggedIn", "False");
             setMessage('Your login was not successful. Please try again.');
           }
         } catch (error) {

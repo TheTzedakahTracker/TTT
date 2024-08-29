@@ -6,46 +6,33 @@ import MemberMain from './MemberMain';
 import HomePage from './HomePage';
 import Contact from './Contact';
 import DonationHistory from "./DonationHistory";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import AI from "./AIApp";
 // import TestComp from "./AI/components/TestComp";
 import ChatComponent from "./AI/components/ChatComponent";
-import MakeDonation from "./MakeDonation";
+import { UserContext} from './UserContext';
 
 
 function App() {
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useContext(UserContext);
+  const [name, setName] = useState(null);
 
   const handleLogout = () => {
     setUser(null);
   };
     return (
       <Router>
-        <NavBar user={user} handleLogout={handleLogout}/>
+        <NavBar user={user} name={name} handleLogout={handleLogout}/>
             <Routes>
-          <Route path='/' element={<HomePage user={user} handleLogout={handleLogout}/>} />
-                <Route
-                  path='/login'
-                  element= {user ? <Navigate to="/" /> : <LogIn setUser={setUser} />}
-                />
-                <Route path='/signup' element={<SignUp />} />
-                <Route path='/donationhistory' element={<DonationHistory/>}/>
-
-                <Route path='/membermain' element={<MemberMain/>} />
-
-                <Route
-                  path='/membermain'
-                  element= {user ? <MemberMain user={user} /> : <Navigate to="/login" />}
-                />
-                <Route path='/contact' element={<Contact/>}/>
-                {/* <Route path='/test' element={<TestComp />} /> */}
-                <Route path='/ai' element={<AI />} />
-                <Route path='/chatcomponent' element={<ChatComponent />} />
-
-            <Route path='/donate' element={<MakeDonation />} />
-
-
-          </Routes>
+              <Route path='/' element={<HomePage user={user} handleLogout={handleLogout}/>} />
+              <Route path='/login' element= {user ? <Navigate to="/" /> : <LogIn setUser={setUser} setName={setName} />}/>
+              <Route path='/signup' element={<SignUp />} />
+              <Route path='/donationhistory' element={<DonationHistory/>}/>
+              <Route path='/membermain' element= {user ? <MemberMain user={user} /> : <Navigate to="/login" />}/>
+              <Route path='/contact' element={<Contact/>}/>
+              <Route path='/ai' element={<AI />} />
+              <Route path='/chatcomponent' element={<ChatComponent />} />
+            </Routes>
         </Router>
       )
 
