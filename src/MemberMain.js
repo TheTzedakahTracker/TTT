@@ -21,10 +21,11 @@ console.log('in function');
 
 
             <div>
-                <button onClick={handleClick}>New Donation</button>
+                <button>New Donation</button>
+                {/* onClick={handleClick} */}
 
             </div>
-          <div>{showDonation && <MakeDonation />}</div>
+          {/* <div>{showDonation && <MakeDonation />}</div> */}
         </>
     );
 

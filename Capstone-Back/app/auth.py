@@ -31,7 +31,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
-class User(db.Model):
+class Users(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     user_fname = db.Column(db.String(50), nullable=False)
     user_lname = db.Column(db.String(50), nullable=False)
@@ -51,7 +51,7 @@ class User(db.Model):
 def get_name():
   # Extract the user ID from the JWT
   user_id = get_jwt_identity()
-  user = User.query.filter_by(id=user_id).first()
+  user = Users.query.filter_by(id=user_id).first()
   
   # Check if user exists
   if user:
@@ -66,12 +66,12 @@ def login():
     password = data['password']
     print('line 53 Received data:', email , password)
 
-    user = User.query.filter_by(user_email=email).first()
+    user = Users.query.filter_by(user_email=email).first()
     is_valid = (user.user_pswd == password) and (user.user_email == email)
     
     if is_valid:
         access_token = create_access_token(identity=user.user_id)
-        return jsonify({'message': 'Login Success', 'access_token': access_token})
+        return jsonify({'message': 'Login Success', 'id': user.user_id, 'name': user.user_fname + ' ' + user.user_lname, 'access_token': access_token})
     else:
         return jsonify({'message': 'Login Failed'}), 401
 
