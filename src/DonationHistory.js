@@ -5,7 +5,8 @@ function DonationHistory({ userId }) {
     const [donations, setDonations] = useState([]);
     const [filters, setFilters] = useState({
         search: '',
-        date: ''
+        startDate: '',
+        endDate:''
     });
 
     useEffect(() => {
@@ -18,7 +19,8 @@ function DonationHistory({ userId }) {
                 params: {
                     user_id: userId,
                     organization: filters.search || undefined,
-                    date: filters.date || undefined,
+                    startDate: filters.startDate || undefined,
+                    endDate: filters.endDate || undefined,
                     
                 }
             });
@@ -47,12 +49,19 @@ function DonationHistory({ userId }) {
                     onChange={handleFilterChange}
                     style={{ marginRight: '20px' }}
                 />
-                <input
-                    type="date"
-                    name="date"
-                    value={filters.startDate}
-                    onChange={handleFilterChange}
-                    style={{ marginRight: '20px' }}
+                <input 
+                    type="date" 
+                    placeholder="Start Date" 
+                    value={filters.search} 
+                    onChange={handleFilterChange} 
+                    style={{ marginRight: '10px', padding: '5px' }}
+                />
+                <input 
+                    type="date" 
+                    placeholder="End Date" 
+                    value={filters.search} 
+                    onChange={handleFilterChange} 
+                    style={{ padding: '5px' }}
                 />
                 <button onClick={fetchDonations}>Apply Filters</button>
             </div>

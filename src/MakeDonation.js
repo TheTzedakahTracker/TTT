@@ -1,10 +1,29 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import PickTheDate from './PickTheDate';
 
-export default function MakeDonation() {
-  console.log('inmk');
+export default function MakeDonation(props) {
+  const [allOrganizations, setAllOrganizations] = useState([]);
+
+  useEffect(() => {
+    let getOrganizations = async () => {
+      try {
+
+        const response = await fetch(`http://localhost:5000/get__all_organizations/${props.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setAllOrganizations(data);
+        } else {
+          console.error('Failed to fetch organization data');
+        }
+      } catch (e) {
+        console.error('Error:', e);
+      }
+    };
+    getOrganizations();
+  }, []);
+
     const [formData, setFormData] = useState({
       amount: '',
       beneficiary: '',
@@ -50,17 +69,19 @@ export default function MakeDonation() {
             </Form.Group>
 
             <Form.Group controlId="formBeneficiary">
-              <Form.Label>Beneficiary Name</Form.Label>
+              <Form.Label>Tzadaka Name</Form.Label>
               <Form.Control
                 as="select"
-                name="beneficiary"
-                value={formData.beneficiary}
-                onChange={handleChange}
+                name="organization"
+                value={formData.organization}
               >
-                <option value="">Select a beneficiary</option>
-                <option value="Beneficiary1">Beneficiary 1</option>
-                <option value="Beneficiary2">Beneficiary 2</option>
-                <option value="Beneficiary3">Beneficiary 3</option>
+                <option value="">Select a Tzedaka</option>
+                
+                 {allOrganizations.map((org) => {
+                  return (
+                    <option value={org.org_id}>{org.org_name}</option>
+                  );
+                })} 
               </Form.Control>
             </Form.Group>
 
