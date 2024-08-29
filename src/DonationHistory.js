@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function DonationHistory({ userId }) {
+function DonationHistory({ props }) {
     const [donations, setDonations] = useState([]);
     const [filters, setFilters] = useState({
         search: '',
@@ -10,7 +10,7 @@ function DonationHistory({ userId }) {
     });
 
     useEffect(() => {
-        fetch('#')
+        fetch(`http://localhost:5000/get__donations/${props.id}`)
             .then(response => response.json())
             .then(data => setDonations(data))
             .catch(error => console.error('Error fetching data:', error));
@@ -25,7 +25,7 @@ function DonationHistory({ userId }) {
         try {
             const response = await axios.get('#', {
                 params: {
-                    user_id: userId,
+                    user_id: props.id,
                     organization: filters.search || undefined,
                     startDate: filters.startDate || undefined,
                     endDate: filters.endDate || undefined,
@@ -47,7 +47,6 @@ function DonationHistory({ userId }) {
 
     return (
         <div>
-            <h3>Donation History</h3>
             <div className="filters" style={{ marginBottom: '20px' }}>
                 <input
                     type="text"

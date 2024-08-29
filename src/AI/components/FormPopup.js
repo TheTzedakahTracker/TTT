@@ -33,7 +33,7 @@ const FormPopup = ({
                 key={index}
                 className={`message ${msg.role}`}
                 dangerouslySetInnerHTML={{
-                  __html: `<strong>${msg.role === 'user' ? 'You' : 'API'}:</strong> ${
+                  __html: `<strong>${msg.role === 'user' ? 'You' : 'TTT'}:</strong> ${
                     typeof msg.text === 'string'
                       ? msg.text.replace(/\n/g, '<br/>')
                       : ''
@@ -42,7 +42,7 @@ const FormPopup = ({
               />
             ))
           ) : (
-            <div>No messages yet.</div>
+            <div>Welcome! We're here to help you discover organizations within the Orthodox Jewish community. Try searching "Shuls in Brooklyn, NY" or "Schools in Miami, FL."</div>
           )}
         </div>
         
