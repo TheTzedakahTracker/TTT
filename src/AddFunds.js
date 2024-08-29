@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import PickTheDate from './PickTheDate';
 import './MemberMain.css';
+import { useNavigate } from 'react-router';
 
-
-export default function MakeDonation(props) {
+export default function MakeDonation(props ) {
   const [message, setMessage] = useState('');
+  const navigate = useNavigate()
   const url = "http://localhost:5000/";
   const [formData, setFormData] = useState({
         userid: props.id,
@@ -59,7 +60,8 @@ export default function MakeDonation(props) {
             fAmount: '',
             fDesc: '',
             fDate: null,
-            });
+          });
+          
         }
       
         formData.fDate = holdDate
