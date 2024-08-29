@@ -67,7 +67,7 @@ export default function MyProfile(props) {
             <button onClick={toggleDonateComponent} style={{ backgroundColor: '#444E8A', color: 'white', padding: '10px 20px', margin: '1rem', border: 'none', borderRadius: '5rem' }}>Record a Donation</button>
             </div>
             <div className="col-2">
-            <button onClick={toggleFundsComponent} style={{ backgroundColor: '#444E8A', color: 'white', padding: '10px 20px', margin: '1rem', border: 'none', borderRadius: '5rem' }}>Add Funds</button>
+            <button onClick={toggleFundsComponent} style={{ backgroundColor: '#444E8A', color: 'white', padding: '10px 20px', margin: '1rem', border: 'none', borderRadius: '5rem' }}>Add User Funds</button>
             </div>
             <div className="col-2">
             <button onClick={toggleOrganizationComponent} style={{ backgroundColor: '#444E8A', color: 'white', padding: '10px 20px', margin: '1rem', border: 'none', borderRadius: '5rem' }}>Add a New Organization</button>
@@ -83,7 +83,7 @@ export default function MyProfile(props) {
         <div>
         {showDonate && <MakeDonation id={props.id} />}
         {showOrganizations && <CreateOrganization id={props.id} />}
-        {showFunds && <AddFunds id={props.id} />}
+            {showFunds && <AddFunds id={props.id} setShowFunds={setShowFunds} />}
         </div>
         </>
 

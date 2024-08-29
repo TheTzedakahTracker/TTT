@@ -10,12 +10,20 @@ function DonationHistory({ userId }) {
     });
 
     useEffect(() => {
+        fetch('#')
+            .then(response => response.json())
+            .then(data => setDonations(data))
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
+
+    
+    useEffect(() => {
         fetchDonations();
     }, [filters]);
 
     const fetchDonations = async () => {
         try {
-            const response = await axios.get('/api/donations', {
+            const response = await axios.get('#', {
                 params: {
                     user_id: userId,
                     organization: filters.search || undefined,
@@ -76,8 +84,27 @@ function DonationHistory({ userId }) {
                             </div>
                         </li>
                     ))
-                ) : (
-                    <li>No donations found</li>
+                ) : (<div>
+                    <h1>Donation List</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Organization</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {donations.map((donation, index) => (
+                                <tr key={index}>
+                                    <td>{donation.amount}</td>
+                                    <td>{donation.organization}</td>
+                                    <td>{donation.date}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
                 )}
             </ul>
         </div>
