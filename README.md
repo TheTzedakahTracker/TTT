@@ -1,3 +1,35 @@
+# Getting Started with Create React App and Python Flask framework to create The Tzedaka Tracker
+This project offers a way we can track charity given. A user can enter the amount they wish to give and to which person or organization to give it to.  It offers an ability to use AI to find relevant organizations that fit the interest of the user. It also shows the history and can filter by date and/or organization.
+
+# The developers and designers involved whith the help of our teachers: 
+Devs and designers: 
+Sarah Lebron
+Breindy Sendrowitz
+Nina (Menucha) Eichorn
+Esther Pesach
+
+Teachers:
+Ms. Furgeson
+Mr. Harp
+
+Thanks for all your help and support. 
+
+# Technologies
+
+For the front end we used React and Flask for the backend communicating via api calls. We used a MySQL Database. 
+
+# To start the program: 
+Backend: 
+To run the backend please see the requirements.txt and install via pip all the python packages. Then run the manage.py to run all relevant scrips. 
+
+Front End:
+
+For the front end please run npm i and then npm start.
+
+Sql: 
+
+run the attached sql file with starter data in mysql.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
