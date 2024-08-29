@@ -269,10 +269,9 @@ def add_userfunds():
     data = None
     new_funds = UserFunds()
     try:
-         data = request.get_json()
+        data = request.get_json()
     except Exception as e:
-         return ('there is error in adding funds:')   
-    logging.info('got here1')
+            return ('there is error in adding funds:')   
     if isinstance(data.get('userid'), int) or data.get('userid').isdigit():
         new_funds.user_id = int(data.get('userid'))
     else:
@@ -298,6 +297,47 @@ def add_userfunds():
     except Exception as e:
         db.session.rollback()
     return jsonify({'message':'funds added'})
+
+
+@app.route('/get__donations/<int:user_id>', methods= ['GET'])
+def get_donations_list(user_id):    
+
+    logging.info(user_id)
+    try:
+        # query = Donations.query.filter_by(user_id=user_id)
+        
+        # if organization:
+        #     query = query.filter_by(organization=organization)
+        
+        # if start_date:
+        #     start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        #     query = query.filter(UserFunds.date >= start_date)
+        
+        # if end_date:
+        #     end_date = datetime.strptime(end_date, '%Y-%m-%d')
+        #     query = query.filter(UserFunds.date <= end_date)
+        
+        # donation = query.all()
+        #donation = UserFunds.query.filter_by(user_id=user_id).all()
+        logging.info('app2or')
+        donations = db.session.query(Organizations.org_name, Donations.donation_amt,Donations.donation_sh_note, Donations.donation_date
+            ).outerjoin(
+                Organizations, Donations.org_id == Organizations.org_id
+            ).filter(
+                Donations.user_id == user_id
+            ).order_by(
+                Donations.donation_id.desc()
+            ).all()    
+        donation_list = [{
+              "orgName": d.org_name,
+              "amount": d.donation_amt,
+              "note": d.donation_sh_note,
+              "date": d.donation_date
+          } for d in donations]
+        
+        return jsonify(donation_list), 200
+    except Exception as e:
+          return jsonify({"error": str(e)}), 500
 
 #route to get organizations
 @app.route('/get__all_organizations/<int:userid>', methods= ['GET'])
@@ -330,25 +370,36 @@ def get_organization_list(userid):
         return jsonify(result_list)
     except Exception as e:
         return jsonify({'error':' getting data for oganizations'})
-#@app.route('/get__donations/<int:userid>', methods= ['GET'])
-#def get_organization_list(userid):    
-    #user_id = request.args.get('user_id')
-    # organization = request.args.get('organization')
-    # start_date = request.args.get('startDate')
-    # end_date = request.args.get('endDate')
-    # try:
-    #      users = Users.query.all()
-    #      users_list = [{
-    #          "userid": user.userid,
-    #          "firstname": user.firstname,
-    #          "lastname": user.lastname,
-    #          "emailAdd": user.emailAdd
-    #      } for user in users]
-    #      return jsonify(users_list), 200
-    # except Exception as e:
-    #      return jsonify({"error": str(e)}), 500
-
-
+@app.route('/get_all_funds/', methods= ['GET'])
+def get_all_fund_list():    
+    user_id = request.args.get('user_id')
+    start_date = request.args.get('startDate')
+    end_date = request.args.get('endDate')
+    try:
+        query = UserFunds.query.filter_by(user_id=user_id)
+        
+        if start_date:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            query = query.filter(UserFunds.date >= start_date)
+        
+        if end_date:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+            query = query.filter(UserFunds.date <= end_date)
+        
+        donation = query.all()
+        logging.info('app2')
+              
+        donation_list = [{
+              "fDesc": d.uf_description,
+              "fAmount": d.uf_amount,
+              "fDate": d.uf_date_added,
+              "fId": d.uf_id
+          } for d in donation]
+        
+        return jsonify(donation_list), 200
+    except Exception as e:
+          return jsonify({"error": str(e)}), 500
+      
 @app.route('/routes', methods=['GET'])
 def get_routes():
     return jsonify({rule.rule: rule.endpoint for rule in app.url_map.iter_rules()})
